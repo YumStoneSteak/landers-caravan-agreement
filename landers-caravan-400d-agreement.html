@@ -23,7 +23,7 @@
     }
 
     .print-bar {
-      width: 210mm;
+      width: min(210mm, calc(100vw - 24px));
       margin: 18px auto 10px;
       text-align: right;
     }
@@ -40,13 +40,20 @@
 
     .page {
       position: relative;
-      width: 210mm;
-      min-height: 297mm;
+      width: min(210mm, calc(100vw - 24px));
+      min-height: auto;
       margin: 0 auto 28px;
       padding: 8.5mm 10mm 7.5mm;
       background: #fff;
       border: 1px solid #d4d4d4;
       box-shadow: 0 8px 28px rgba(0, 0, 0, .12);
+      overflow-wrap: break-word;
+    }
+
+    @media screen and (min-width: 900px) {
+      .page {
+        min-height: 297mm;
+      }
     }
 
     .doc-head {
@@ -257,8 +264,81 @@
       margin: 0;
     }
 
+    @media screen and (max-width: 640px) {
+      .print-bar {
+        width: calc(100vw - 20px);
+        margin: 10px auto;
+      }
+
+      .print-bar button {
+        width: 100%;
+        padding: 10px 12px;
+      }
+
+      .page {
+        width: calc(100vw - 20px);
+        margin-bottom: 18px;
+        padding: 14px 12px 42px;
+      }
+
+      .doc-head {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .stamp {
+        justify-self: center;
+        width: 62px;
+        height: 62px;
+        font-size: 13px;
+      }
+
+      h1 {
+        font-size: 19px;
+        line-height: 1.25;
+      }
+
+      .badges {
+        flex-wrap: wrap;
+      }
+
+      .meta,
+      .info {
+        font-size: 8.2px;
+      }
+
+      .meta th,
+      .info th {
+        width: 56px;
+        padding-left: 3px;
+        padding-right: 3px;
+      }
+
+      .articles {
+        font-size: 8.2px;
+      }
+
+      .article {
+        grid-template-columns: 54px 1fr;
+      }
+
+      .sign-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .legal-note {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        text-align: center;
+      }
+    }
+
     @media print {
+      html,
       body {
+        width: 210mm;
+        height: 297mm;
         background: #fff;
       }
 
@@ -268,11 +348,12 @@
 
       .page {
         width: 210mm;
-        min-height: 297mm;
+        height: 297mm;
         margin: 0;
         padding: 8mm 10mm 7mm;
         border: 0;
         box-shadow: none;
+        overflow: hidden;
       }
 
       .stamp {
@@ -284,7 +365,7 @@
 </head>
 <body>
   <div class="print-bar">
-    <button type="button" onclick="window.print()">인쇄</button>
+    <button type="button" data-print-button>인쇄</button>
   </div>
 
   <main class="page">
@@ -417,5 +498,10 @@
 
     <div class="legal-note">※ 본 문서는 가족 장난 및 추억 보관용이며, 실제 법적 효력은 별도 확인이 필요합니다.</div>
   </main>
+  <script>
+    document.querySelector("[data-print-button]").addEventListener("click", function () {
+      window.print();
+    });
+  </script>
 </body>
 </html>
